@@ -1,0 +1,252 @@
+<title>Марафон testpilot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f6f7f9; --surface:#fcfcfb; --line:#e3e5ea; --grid:#eceef2;
+  --text:#101318; --text-2:#4d535e; --muted:#7a808b;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#4a3aa7; --s5:#e87ba4; --s6:#a87400; --s7:#5f6b7a; --s8:#0f7f8c;
+  --good:#0ca30c; --warn:#fab219; --crit:#d03b3b;
+  --seq-1:#184f95; --seq-2:#3987e5; --seq-3:#86b6ef;
+  --tip-bg:#101318; --tip-text:#ffffff;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#121315; --surface:#1a1a19; --line:#2c2e31; --grid:#26282b;
+    --text:#ffffff; --text-2:#c3c2b7; --muted:#8d8f94;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#9085e9; --s5:#d55181; --s6:#e0a526; --s7:#9aa6b5; --s8:#3cc4d2;
+    --seq-1:#86b6ef; --seq-2:#3987e5; --seq-3:#1c5cab;
+    --tip-bg:#f3f4f6; --tip-text:#101318;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#121315; --surface:#1a1a19; --line:#2c2e31; --grid:#26282b;
+  --text:#ffffff; --text-2:#c3c2b7; --muted:#8d8f94;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#9085e9; --s5:#d55181; --s6:#e0a526; --s7:#9aa6b5; --s8:#3cc4d2;
+  --seq-1:#86b6ef; --seq-2:#3987e5; --seq-3:#1c5cab;
+  --tip-bg:#f3f4f6; --tip-text:#101318;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font:15px/1.55 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;padding-inline:16px;padding-block:28px 56px}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1{font-size:30px;line-height:1.15;margin:0;font-weight:600;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:18px;margin:0 0 4px;font-weight:600;text-wrap:balance}
+.eyebrow{font:500 12px/1 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{color:var(--text-2);max-width:68ch;margin:8px 0 0}
+.sub{color:var(--text-2);font-size:13.5px;margin:0 0 14px;max-width:72ch}
+.mono,.num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px}
+.verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.card .who{display:flex;align-items:center;gap:8px;font-weight:600}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;padding:3px 9px;border-radius:999px;border:1px solid var(--line);width:max-content}
+.pill i{font-style:normal;font-weight:700}
+.pill.good i{color:var(--good)} .pill.crit i{color:var(--crit)}
+.card .big{font:500 26px/1.1 "IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.card .big small{font-size:14px;color:var(--muted)}
+.card p{margin:0;color:var(--text-2);font-size:13.5px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.chart{width:100%;height:auto;display:block;overflow:visible}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--text-2);margin-bottom:8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.tablebox{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:500;color:var(--muted);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+td.num,th.num{text-align:right}
+.st{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;font-size:12.5px}
+.st i{font-style:normal;font-weight:700;width:14px;text-align:center}
+.st.y i{color:var(--good)} .st.p i{color:var(--warn)} .st.n i{color:var(--crit)}
+.note{font-size:12.5px;color:var(--muted)}
+ol.steps{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px;color:var(--text-2);font-size:14px}
+ol.steps b{color:var(--text);font-weight:500}
+.trap{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--s2);margin-left:6px;white-space:nowrap}
+#tip{position:fixed;pointer-events:none;background:var(--tip-bg);color:var(--tip-text);font-size:12.5px;padding:7px 10px;border-radius:6px;line-height:1.4;max-width:260px;opacity:0;transition:opacity .08s}
+#tip.on{opacity:1}
+.hit{cursor:default}
+.hit:hover .mark{opacity:.85}
+@media (max-width:760px){.verdict,.grid2{grid-template-columns:1fr}h1{font-size:25px}}
+@media (prefers-reduced-motion:reduce){#tip{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">testpilot · 1С:ERP · 26.09 и 29.09.2026</div>
+    <h1>Марафон testpilot: Claude и Codex на одном сценарии</h1>
+    <p class="lede">Один «неразумно сложный» сценарий из четырех форм цепочкой, с шестью ловушками. 26.09 три субагента Claude шли параллельно, каждый на своем тест-клиенте. 29.09 тот же сценарий с тем же промптом прошел Sonnet 5.5 в двух вариантах effort, тоже параллельно. В тот же день сценарий по очереди прошел Codex CLI на GPT-6 Sol и GPT-6 Luna, каждый в чистом сеансе. Документы всех, кто дошел до конца, сверены запросом к базе.</p>
+    <p class="lede">Sonnet 5.5 на high прошел все 16 точек. GPT-6 Sol на medium набрал 15,5 точки за $2,31 и стал самым дешевым за точку среди дошедших до конца. Сбился он только на ловушке с видом цены, взял ее со второго захода и сам записал шаг как провал. GPT-6 Luna на medium честно остановился на той же ловушке, а на high прошел все 16 точек за $0,24, но медленнее всех — 17 минут. Haiku остановился на шаге 4 и отметил непройденные шаги как пройденные.</p>
+  </header>
+
+  <section class="verdict" id="cards"></section>
+
+  <section class="panel">
+    <h2>Контрольные точки</h2>
+    <p class="sub">16 точек по протоколам и по базе. Частично — точка взята со второй попытки, обходным путем, который увел в сторону, или вердикт «прошел» стоит рядом с честно записанным расхождением.</p>
+    <div class="tablebox"><table id="checks"></table></div>
+  </section>
+
+  <section class="grid2">
+    <div class="panel">
+      <h2>Стоимость прогона</h2>
+      <p class="sub">Доллары по ценам API. Почти всё — повторное чтение контекста из кеша на каждом ходе.</p>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--seq-1)"></i>чтение кеша</span>
+        <span><i class="sw" style="background:var(--seq-2)"></i>запись в кеш / новый вход</span>
+        <span><i class="sw" style="background:var(--seq-3)"></i>выход</span>
+      </div>
+      <svg class="chart" id="cost" viewBox="0 0 480 170" role="img" aria-label="Стоимость прогона по моделям"></svg>
+    </div>
+    <div class="panel">
+      <h2>Время прогона</h2>
+      <p class="sub">Минуты от первого до последнего хода. Claude шли параллельно двумя волнами: 26.09 три модели за 13,5 минуты по часам, 29.09 два Sonnet 5.5 за 9 минут. Codex шел по одному прогону; GPT-6 Luna high — самый долгий, 17 минут.</p>
+      <svg class="chart" id="time" viewBox="0 0 480 170" role="img" aria-label="Время прогона по моделям"></svg>
+    </div>
+    <div class="panel">
+      <h2>Уникальные токены</h2>
+      <p class="sub">Каждый токен посчитан один раз: новый вход, запись в кеш и выход. Повторные чтения кеша сюда не входят. Около 97 тыс. — общий стартовый контекст агента Claude. Для Codex это новый вход плюс выход.</p>
+      <svg class="chart" id="uniq" viewBox="0 0 480 170" role="img" aria-label="Уникальные токены по моделям"></svg>
+    </div>
+    <div class="panel">
+      <h2>Цена одной контрольной точки</h2>
+      <p class="sub">Стоимость прогона, деленная на набранные баллы. Haiku ничего не проверил и обошелся дороже всех. GPT-6 Luna дешевле всех за точку, но его точки только с первых шагов. Цену точки стоит сравнивать между прогонами, дошедшими до конца.</p>
+      <svg class="chart" id="perpt" viewBox="0 0 480 170" role="img" aria-label="Цена одной контрольной точки"></svg>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Цифры целиком</h2>
+    <div class="tablebox"><table id="nums"></table></div>
+    <p class="note">Токены сняты из журналов субагентов, повторы одного сообщения схлопнуты по его идентификатору. Цены за 1 млн токенов: Opus 5.5 — $4 вход / $20 выход, Sonnet 5 и Sonnet 5.5 — $2 / $10, Haiku 4.5 — $1 / $5, GPT-6 Sol — $2 / $10, GPT-6 Luna — $0,10 / $0,50. Запись в кеш — 1,25 цены входа. Чтение кеша у Opus 5.5 — 0,05 цены входа, у остальных — 0,1. Журнал Codex отдает только новый вход, чтение кеша и выход, запись в кеш в нем не видна, поэтому новый вход посчитан по цене входа. Контекст Codex не превышал 272 тыс., длинный тариф не применялся. Codex работал в своей оболочке со своим системным промптом, поэтому сравнивается связка агента и модели, а не модель в чистом виде. В первой версии отчета Opus считался по 0,1, и его стоимость была завышена: $9,78 вместо $5,66. Effort у Opus 5.5 и Sonnet 5 был medium из настроек Claude Code; у Sonnet 5.5 задан явно определением агента. Шкала effort у Sonnet 5.5 перекалибрована, medium у двух Sonnet не равнозначен. Мой собственный пробный прогон в сумму не входит.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Сценарий</h2>
+    <p class="sub">Цепочка «заказ → рабочее место счетов → счет → оплата» и обратно по окнам. Ловушки в тексте сценария не раскрыты.</p>
+    <ol class="steps">
+      <li><b>Прямой вход в счет на оплату.</b> Система отказывает, текст читается из окна ошибки.</li>
+      <li><b>Клиент.</b> Сначала несуществующий партнер, потом выбор через форму выбора.<span class="trap">форма выбора пустая</span><span class="trap">два похожих поля</span></li>
+      <li><b>Три строки товаров,</b> в третьей нет количества.<span class="trap">цену не ввести при виде цены</span></li>
+      <li><b>Проведение с ошибкой:</b> удалить строку, сменить количество, сверить суммы и НДС.</li>
+      <li><b>Проведение и снимок формы:</b> что поменялось после записи.</li>
+      <li><b>Отказ от сохранения</b> и проверка переоткрытием.</li>
+      <li><b>Накладная на основании.</b> Действие «Ship» в строках, повторная попытка.<span class="trap">список без ввода текстом</span><span class="trap">диалог на три кнопки</span></li>
+      <li><b>Счет на основании</b> через рабочее место с этапами оплаты.</li>
+      <li><b>Оплата на основании счета:</b> нулевая сумма, затем частичная оплата 1 000 USD с ручным пересчетом в рубли.<span class="trap">скрытые обязательные поля</span></li>
+      <li><b>Обратный путь по окнам:</b> к оплате 700, оплачивается 1 000.</li>
+      <li><b>Итог в списке заказов:</b> сумма 1 700 и 59 % оплаты.</li>
+    </ol>
+  </section>
+</div>
+<div id="tip" role="tooltip"></div>
+
+<script>
+const M=[
+  {k:'opus',name:'Opus 5.5',c:'var(--s1)',eff:'medium',sec:629,turns:151,tools:165,out:32330,uniq:211896,write:179264,read:20576827,ctx:179276,
+   cost:{read:4.115,write:.896,out:.648},total:5.659,score:16,done:true,
+   note:'Все 12 шагов. Документы 17 / 2 / 3 проведены, суммы совпали с базой.'},
+  {k:'sonnet',name:'Sonnet 5',c:'var(--s2)',eff:'medium',sec:812,turns:162,tools:199,out:51170,uniq:267794,write:216300,read:25450426,ctx:216302,
+   cost:{read:5.090,write:.541,out:.513},total:6.143,score:15,done:true,
+   note:'Все 12 шагов. Сначала заполнил не то поле, исправился по тексту ошибки проведения.'},
+  {k:'s55h',name:'Sonnet 5.5 high',c:'var(--s4)',eff:'high',sec:537,turns:140,tools:167,out:34303,uniq:217380,write:182797,read:19210943,ctx:182799,
+   cost:{read:3.842,write:.457,out:.343},total:4.643,score:16,done:true,
+   note:'Все 12 шагов без промахов. Документы 30 / 8 / 8, оплата 84 638,50 ₽ = 1 000 USD, совпало с базой.'},
+  {k:'s55m',name:'Sonnet 5.5 medium',c:'var(--s5)',eff:'medium',sec:410,turns:110,tools:150,out:28130,uniq:183106,write:154756,read:13893884,ctx:171665,
+   cost:{read:2.779,write:.387,out:.281},total:3.447,score:14,done:true,
+   note:'Все 12 шагов. Ошибся в пересчете: 84 637,32 ₽ вместо 84 638,50, отсюда 999,99 USD. Причиной назвал платформу.'},
+  {k:'haiku',name:'Haiku 4.5',c:'var(--s3)',eff:'не задан',sec:250,turns:70,tools:81,out:20876,uniq:150014,write:128574,read:7342877,ctx:128582,
+   cost:{read:.734,write:.161,out:.105},total:1.000,score:1,done:false,
+   note:'Встал на шаге 4: клиент вписан в поле контрагента. Причину не нашел, шаги 5–6 записал как пройденные.',stop:4},
+  {k:'cx6m',name:'GPT-6 Sol',c:'var(--s6)',eff:'medium',sec:612,turns:124,tools:123,out:18822,uniq:138027,write:0,read:9440768,ctx:109488,
+   cost:{read:1.888,write:.238,out:.188},total:2.315,score:15.5,done:true,
+   note:'Codex CLI. Все 12 шагов, документы 31 / 9 / 9 совпали с базой. Вид цены обошел со второго захода и сам записал шаг 3 как провал.'},
+  {k:'cxlm',name:'GPT-6 Luna medium',c:'var(--s7)',eff:'medium',sec:222,turns:44,tools:43,out:7101,uniq:91084,write:0,read:2354176,ctx:68330,
+   cost:{read:.0235,write:.0084,out:.0036},total:.0355,score:5,done:false,
+   note:'Codex CLI. Встал на цене в первой строке, остальные шаги честно пометил «не проверено». Заказа в базе нет.',stop:3},
+  {k:'cxlh',name:'GPT-6 Luna high',c:'var(--s8)',eff:'high',sec:1020,turns:187,tools:186,out:34685,uniq:297127,write:0,read:19772672,ctx:155242,
+   cost:{read:.1977,write:.0262,out:.0173},total:.2413,score:16,done:true,
+   note:'Codex CLI. Все 12 шагов без провалов, документы 32 / 10 / 10 совпали с базой. Самый дешевый полный балл, но самый долгий прогон.'}
+];
+const CHECKS=[
+  ['Отказ прямого входа записан дословно','y','y','y','y','y','y','y','y'],
+  ['Ответ на несуществующего партнера записан','y','y','y','y','n','y','y','y'],
+  ['Пустая форма выбора распознана, клиент введен обходом','y','p','y','y','n','y','y','y'],
+  ['Клиент в правильном поле с первого раза','y','p','y','y','n','y','y','y'],
+  ['Ловушка «вид цены» обойдена','y','y','y','y','n','p','n','y'],
+  ['Ошибка проведения записана, строки исправлены, суммы сверены','y','y','y','y','n','y','n','y'],
+  ['Заказ проведен, номер получен','y','y','y','y','n','y','n','y'],
+  ['Снимок формы сравнен после проведения','y','y','y','y','n','y','n','y'],
+  ['Отказ от сохранения проверен переоткрытием','y','y','y','y','n','y','n','y'],
+  ['Накладная: две попытки и остановка','y','y','y','y','n','y','n','y'],
+  ['Счет на 1 700 создан и открыт','y','y','y','y','n','y','n','y'],
+  ['Три сообщения при нулевой оплате','y','y','y','y','n','y','n','y'],
+  ['Оплата 1 000 USD = 84 638,50 ₽, сверено с базой','y','y','y','n','n','y','n','y'],
+  ['Обратный путь: к оплате 700, оплачивается 1 000','y','y','y','p','n','y','n','y'],
+  ['Итог в списке: 59 % оплаты','y','y','y','y','n','y','n','y'],
+  ['Протокол без ложных «прошел»','y','y','y','p','n','y','y','y']
+];
+const ST={y:['✓','да'],p:['◐','частично'],n:['✕','нет']};
+const fmt=(n,d=0)=>n.toLocaleString('ru-RU',{minimumFractionDigits:d,maximumFractionDigits:d});
+const usd=n=>'$'+fmt(n,2);
+const fsc=n=>n.toLocaleString('ru-RU',{maximumFractionDigits:1});
+const tip=document.getElementById('tip');
+function showTip(e,html){tip.innerHTML=html;tip.classList.add('on');const x=Math.min(e.clientX+14,innerWidth-tip.offsetWidth-8);tip.style.left=x+'px';tip.style.top=(e.clientY+14)+'px'}
+function hideTip(){tip.classList.remove('on')}
+
+document.getElementById('cards').innerHTML=M.map(m=>`
+  <div class="card">
+    <div class="who"><span class="dot" style="background:${m.c}"></span>${m.name}</div>
+    <span class="pill ${m.done?'good':'crit'}"><i>${m.done?'✓':'✕'}</i>${m.done?'дошел до конца':'остановился на шаге '+m.stop}</span>
+    <span class="note">effort: ${m.eff}</span>
+    <div class="big">${fsc(m.score)}<small> / 16 точек</small></div>
+    <p><span class="num">${usd(m.total)}</span> · <span class="num">${fmt(m.sec/60,1)}</span> мин · <span class="num">${m.tools}</span> вызовов</p>
+    <p>${m.note}</p>
+  </div>`).join('');
+
+const t=document.getElementById('checks');
+t.innerHTML='<thead><tr><th>Точка</th>'+M.map(m=>`<th>${m.name}</th>`).join('')+'</tr></thead><tbody>'+
+  CHECKS.map(r=>'<tr><td>'+r[0]+'</td>'+r.slice(1).map(s=>`<td><span class="st ${s}"><i>${ST[s][0]}</i>${ST[s][1]}</span></td>`).join('')+'</tr>').join('')+
+  '</tbody><tfoot><tr><td><b>Итого баллов</b> (частично = 0,5)</td>'+M.map(m=>`<td class="num"><b>${fsc(m.score)}</b></td>`).join('')+'</tr></tfoot>';
+
+const NS='http://www.w3.org/2000/svg';
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);parent&&parent.appendChild(e);return e}
+function niceMax(v){const p=Math.pow(10,Math.floor(Math.log10(v)));const f=v/p;return (f<=1?1:f<=2?2:f<=5?5:10)*p}
+// горизонтальные бары: 3 модели, одна ось от нуля
+function hbars(id,rows,fmtV,maxV,tipFn){
+  const svg=document.getElementById(id);const L=86,R=466,top=10,bh=26,gap=16;
+  const max=maxV||niceMax(Math.max(...rows.map(r=>r.total)));
+  const x=v=>L+(R-L)*v/max;
+  for(let i=0;i<=4;i++){const v=max*i/4,gx=x(v);
+    el('line',{x1:gx,x2:gx,y1:top-4,y2:top+rows.length*(bh+gap)-gap+4,stroke:'var(--grid)','stroke-width':1},svg);
+    const tx=el('text',{x:gx,y:top+rows.length*(bh+gap)+8,'text-anchor':'middle','font-size':11,fill:'var(--muted)','font-family':'IBM Plex Mono, monospace'},svg);tx.textContent=fmtV(v,true)}
+  rows.forEach((r,i)=>{const y=top+i*(bh+gap);
+    const lab=el('text',{x:L-10,y:y+bh/2+4,'text-anchor':'end','font-size':12.5,fill:'var(--text-2)'},svg);lab.textContent=r.name;
+    const g=el('g',{class:'hit'},svg);
+    let acc=0;r.segs.forEach((s,j)=>{const w=Math.max(0,x(acc+s.v)-x(acc)-(j<r.segs.length-1?2:0));
+      el('rect',{class:'mark',x:x(acc),y,width:Math.max(w,1),height:bh,fill:s.c,rx:j===r.segs.length-1?4:0},g);acc+=s.v});
+    el('rect',{x:L,y:y-gap/2,width:R-L,height:bh+gap,fill:'transparent'},g);
+    const v=el('text',{x:Math.min(x(r.total)+8,R-2),y:y+bh/2+4,'font-size':12.5,fill:'var(--text)','font-family':'IBM Plex Mono, monospace','text-anchor':x(r.total)+60>R?'end':'start'},svg);v.textContent=fmtV(r.total);
+    if(x(r.total)+60>R){v.setAttribute('fill','#fff');v.setAttribute('x',x(r.total)-8)}
+    g.addEventListener('mousemove',e=>showTip(e,tipFn(r)));g.addEventListener('mouseleave',hideTip)});
+  svg.setAttribute('viewBox',`0 0 480 ${top+rows.length*(bh+gap)+14}`);
+}
+hbars('cost',M.map(m=>({name:m.name,total:m.total,m,segs:[{v:m.cost.read,c:'var(--seq-1)'},{v:m.cost.write,c:'var(--seq-2)'},{v:m.cost.out,c:'var(--seq-3)'}]})),
+  (v,ax)=>ax?'$'+fmt(v):usd(v),8,
+  r=>`<b>${r.name}</b> — ${usd(r.total)}<br>чтение кеша ${usd(r.m.cost.read)} (${fmt(r.m.read/1e6,1)} млн ток.)<br>запись в кеш или новый вход ${usd(r.m.cost.write)}<br>выход ${usd(r.m.cost.out)}`);
+hbars('time',M.map(m=>({name:m.name,total:m.sec/60,m,segs:[{v:m.sec/60,c:m.c}]})),
+  (v,ax)=>ax?fmt(v):fmt(v,1)+' мин',20,
+  r=>`<b>${r.name}</b> — ${fmt(r.m.sec/60,1)} мин<br>${r.m.turns} ходов, ${r.m.tools} вызовов инструментов`);
+hbars('uniq',M.map(m=>({name:m.name,total:m.uniq/1000,m,segs:[{v:m.uniq/1000,c:m.c}]})),
+  (v,ax)=>ax?fmt(v):fmt(v)+' тыс.',400,
+  r=>`<b>${r.name}</b> — ${fmt(r.m.uniq)} ток.<br>запись в кеш ${fmt(r.m.write)} (у Codex не учитывается)<br>выход ${fmt(r.m.out)}<br>макс. контекст ${fmt(r.m.ctx)}`);
+hbars('perpt',M.map(m=>{const s=m.score;return {name:m.name,total:m.total/s,m,s,segs:[{v:m.total/s,c:m.c}]}}),
+  (v,ax)=>ax?'$'+fmt(v,2):usd(v),1.2,
+  r=>`<b>${r.name}</b> — ${usd(r.total)} за точку<br>${usd(r.m.total)} ÷ ${fsc(r.s)} балл.`);
+
+document.getElementById('nums').innerHTML='<thead><tr><th>Модель</th><th>Effort</th><th class="num">Баллы</th><th class="num">Минуты</th><th class="num">Ходы</th><th class="num">Вызовы</th><th class="num">Выход</th><th class="num">Уникальные</th><th class="num">Чтение кеша</th><th class="num">Стоимость</th></tr></thead><tbody>'+
+  M.map(m=>`<tr><td><span class="dot" style="display:inline-block;background:${m.c};margin-right:6px"></span>${m.name}</td><td>${m.eff}</td><td class="num">${fsc(m.score)}</td><td class="num">${fmt(m.sec/60,1)}</td><td class="num">${m.turns}</td><td class="num">${m.tools}</td><td class="num">${fmt(m.out)}</td><td class="num">${fmt(m.uniq)}</td><td class="num">${fmt(m.read)}</td><td class="num">${usd(m.total)}</td></tr>`).join('')+
+  `<tr><td><b>Всего</b></td><td></td><td></td><td class="num">13,5 + 9,0 + 10,2 + 3,7 + 17,0</td><td class="num">988</td><td class="num">1114</td><td class="num">${fmt(227417)}</td><td class="num">${fmt(1556428)}</td><td class="num">${fmt(118042573)}</td><td class="num"><b>${usd(23.484)}</b></td></tr></tbody>`;
+</script>
