@@ -53,9 +53,10 @@
 | Codex CLI, GPT-6 Luna medium | 5 | 3,7 | $0,04 |
 | Claude Code, Haiku 4.5 | 1 | 4,2 | $1,00 |
 
-Подробно — [`benchmark/results.md`](benchmark/results.md), интерактивный отчет —
-[`benchmark/report.html`](benchmark/report.html) (открыть локально в браузере) и
-[онлайн-версия](https://claude.ai/artifact/PvCGccDdbfmRYBE29qT3Bf).
+**[Интерактивный отчет](https://afk-yar.github.io/1c-testpilot-agent-kit/benchmark/report.html)**
+(он же на [claude.ai](https://claude.ai/artifact/PvCGccDdbfmRYBE29qT3Bf), исходник —
+[`benchmark/report.html`](benchmark/report.html)). Подробно текстом —
+[`benchmark/results.md`](benchmark/results.md).
 
 ## Быстрый старт
 
